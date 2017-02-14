@@ -1,14 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ThomasPackage;
 
-/**
- *
- * @author Windows User
- */
+import otherPackage.Seat;
+import java.util.ArrayList;
+
+/*
+@author "Thomas S. Mjåland"
+*/
 public class SeatRegister {
+    Seat seats[][];
     
+    public SeatRegister(int rows, int columns){
+        seats = new Seat[rows][columns];
+    }
+    
+    public Seat getSeat(int row, char letter) throws IllegalArgumentException{
+        int column = (int)letter-(int)'A';
+        int seatRows = seats.length;
+        int seatColumns = seats[0].length;
+        if (row>=0 && row<seatRows && column>=0 && column<seatColumns){
+        return seats[row][column];
+        }else{
+            throw new IllegalArgumentException("Given row or letter was outside seat boundaries");
+        }
+    }
 }
