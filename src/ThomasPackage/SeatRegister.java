@@ -4,7 +4,7 @@ import otherPackage.Seat;
 import java.util.ArrayList;
 
 /*
-@author "Thomas S. Mjåland"
+@author Thomas Sund Mjåland
 */
 public class SeatRegister {
     Seat seats[][];
