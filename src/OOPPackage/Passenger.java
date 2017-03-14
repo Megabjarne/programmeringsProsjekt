@@ -1,11 +1,10 @@
-package otherPackage;
+package OOPPackage;
 
 
 /**
  * Write a description of class Passenger here.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Bendik Delp
  */
 public class Passenger
 {

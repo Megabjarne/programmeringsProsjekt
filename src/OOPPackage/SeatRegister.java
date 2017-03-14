@@ -1,6 +1,5 @@
-package ThomasPackage;
+package OOPPackage;
 
-import otherPackage.Seat;
 import java.util.ArrayList;
 
 /*

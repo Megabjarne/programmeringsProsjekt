@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ThomasPackage;
+package OOPPackage;
 
-import com.sun.net.httpserver.Authenticator;
-import com.sun.org.apache.bcel.internal.generic.GOTO;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
