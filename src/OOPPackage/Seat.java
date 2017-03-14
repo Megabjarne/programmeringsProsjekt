@@ -38,4 +38,9 @@ public class Seat
     {
         return available;
     }
+    
+    @Override
+    public String toString(){
+        return Integer.toString(row) + letter;
+    }
 }

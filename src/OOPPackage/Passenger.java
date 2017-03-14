@@ -32,10 +32,15 @@ public class Passenger
     {
         return surName;
     }
+    
 
     public String emailAddress()
     {
         return mailAddress;
     }
 
+    @Override
+    public String toString(){
+        return surName + ", " + firstName + " " + mailAddress;
+    }
 }

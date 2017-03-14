@@ -66,4 +66,9 @@ public class Flight {
     public String getFlightID(){
         return flightID;
     }
+    
+    @Override
+    public String toString(){
+        return flightID + " " + departureCity + " -> " + arrivalCity + "   " + Instant.ofEpochSecond(departureTime).toString() + " to " + Instant.ofEpochSecond(arrivalTime).toString();
+    }
 }

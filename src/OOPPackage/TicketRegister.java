@@ -1,6 +1,7 @@
 package OOPPackage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -84,5 +85,13 @@ public class TicketRegister {
             }
         }
         return false;
+    }
+    
+    /**
+     * 
+     * @return iterator for ticket list
+     */
+    public Iterator<Ticket> iterator(){
+        return ticketList.iterator();
     }
 }

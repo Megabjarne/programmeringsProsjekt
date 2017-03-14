@@ -32,4 +32,9 @@ public class Ticket {
     {
        return flightID; 
     }
+    
+    @Override
+    public String toString(){
+        return Integer.toString(ticketID) + " | " + seat + " - " + passenger + " on flight " + flightID;
+    }
 }
