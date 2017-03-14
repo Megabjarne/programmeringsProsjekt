@@ -1,7 +1,5 @@
 package OOPPackage;
 
-import java.util.ArrayList;
-
 /*
 @author Thomas Sund Mjåland
 */
