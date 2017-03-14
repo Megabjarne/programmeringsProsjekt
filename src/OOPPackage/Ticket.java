@@ -6,14 +6,14 @@ package OOPPackage;
  */
 public class Ticket {
     int ticketID;
-    int seatID;
+    Seat seat;
     Passenger passenger;
     int price;
     String flightID;
     
-    public Ticket(int seatId, int _price, String flight, Passenger _passenger)
+    public Ticket(Seat _seat, int _price, String flight, Passenger _passenger)
     {
-        seatID = seatId;
+        seat = _seat;
         price = _price;
         flightID = flight;
         passenger = _passenger;
