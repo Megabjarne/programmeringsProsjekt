@@ -8,12 +8,10 @@ import java.util.Iterator;
  * @author Thomas Sund Mjåland
  */
 public class TicketRegister {
-
+    /**
+     * List storing all tickets handled by this register
+     */
     ArrayList<Ticket> ticketList = new ArrayList<>();
-
-    public TicketRegister() {
-
-    }
 
     /**
      * Adds a ticket to the registry, assigns it an unique ID and returns the
