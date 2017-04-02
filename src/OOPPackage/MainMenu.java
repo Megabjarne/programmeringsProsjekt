@@ -3,62 +3,156 @@ package OOPPackage;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Thomas Sund Mjåland
- * 
- * 
- * ATTENTION:
- * This is in no way a final draft, it is unstable, prone to crashing and with little to no errorhandling, 
- * it is only meant to demonstrate the possibilities and give a taste of what is to come
+ *
+ *
+ * ATTENTION: This is in no way a final draft, it is unstable, prone to crashing
+ * and with little to no errorhandling, it is only meant to demonstrate the
+ * possibilities and give a taste of what is to come
  */
 public class MainMenu {
+
     /**
      * Creates a menu and runs it
      */
     static void run() {
         Scanner input = new Scanner(System.in);
         /**
-         * The "add flight"-action, takes the user through the procedure of adding a new flight to the flightregister
+         * The "add flight"-action, takes the user through the procedure of
+         * adding a new flight to the flight-register
          */
         Menu addFlight = new Menu.ActionItem("Add flight") {
             @Override
             public void run() {
                 //the data we need to collect from the user
-                Date departureDate;
-                Date arrivalDate;
-                String departureCity;
-                String arrivalCity;
-                String flightID;
-                int rows, columns;
+                Date departureDate=null;
+                Date arrivalDate=null;
+                String departureCity=null;
+                String arrivalCity=null;
+                String flightID=null;
+                int rows=0, columns=0;
 
                 //The date format we use to parse the user's date-input
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM HH:mm");
-                System.out.println("input departure date [day/month hour:minute]");
-                try {
-                    departureDate = df.parse(input.nextLine());
-                } catch (Exception ex) {
-                    return;
+                boolean done = false; //Used to repeat the inputting until valid input has been given
+                String s = ""; //Used to hold given input before being processed
+
+                done = false;
+                while (!done) {
+                    System.out.println("Input the departure date [day/month hour:minute]");
+                    try {
+                        s = input.nextLine();
+                        if (s.toLowerCase().equals("exit")) {    //if user wishes to exit at this point
+                            return;
+                        }
+                        departureDate = df.parse(s);
+                        done = true;
+                    } catch (Exception ex) {
+                        System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
+                    }
                 }
-                System.out.println("input arrival date [day/month hour:minute]");
-                try {
-                    arrivalDate = df.parse(input.nextLine());
-                } catch (Exception ex) {
-                    return;
+
+                done = false;
+                while (!done) {
+                    System.out.println("Input the arrival date [day/month hour:minute]");
+                    try {
+                        s = input.nextLine();
+                        if (s.toLowerCase().equals("exit")) {    //If user wishes to exit at this point
+                            return;
+                        }
+                        arrivalDate = df.parse(s);
+                        done = true;
+                    } catch (Exception ex) {
+                        System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
+                    }
                 }
-                System.out.println("input departure city airport-code");
-                departureCity = input.nextLine();
-                System.out.println("input arrival city airport-code");
-                arrivalCity = input.nextLine();
-                System.out.println("Input flight ID");
-                flightID = input.nextLine();
-                System.out.println("dimentions of the seats [columns rows]");
-                columns = input.nextInt();
-                rows = input.nextInt();
-                try {
-                    System.in.skip(1000);   //Tries to skip any and all trailing input, such as '\n''s and similar
-                } catch (Exception ex) {}   //We do not care to handle any errors occuring during the skip, as it is not strictly necessary, but nice to have
+
+                done = false;
+                while (!done) {
+                    System.out.println("input departure city airport-code");
+                    s = input.nextLine().toUpperCase();
+                    if (s.toLowerCase().equals("exit")) {    //If the user wishes to exit at this point
+                        return;
+                    }
+                    if (s.length() == 3) {
+                        departureCity = s;
+                        done = true;
+                    } else {
+                        System.out.println("Sorry, but '" + s + "' is not a valid city-code, a city code must consist of three letters");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("input arrival city airport-code");
+                    s = input.nextLine().toUpperCase();
+                    if (s.toLowerCase().equals("exit")) {    //If the user wishes to exit at this point
+                        return;
+                    }
+                    if (s.length() == 3) {
+                        arrivalCity = s;
+                        done = true;
+                    } else {
+                        System.out.println("Sorry, but '" + s + "' is not a valid city-code, a city code must consist of three letters");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("Input flight ID");
+                    s = input.nextLine().toUpperCase();
+                    if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this stage
+                        return;
+                    }
+                    if (Pattern.compile("[A-Z]{1,2}\\d{3,4}").matcher(s).matches()) {   //Attempts to match the given input to the '[A-Z]{1,2}\\d{3,4}'-regex pattern, can be expanded for more leeway
+                        flightID = s;
+                        done = true;
+                    } else {
+                        System.out.println("Sorry, the given flight number is not considered valid,\nPlease conform to the standard LL(L)nnn(n) pattern (L-letter, n-number, (L)-optional letter)");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("How many seats wide? either in seat-count or by highest letter (D = 4 seats wide)");
+                    if (input.hasNextInt()) {
+                        columns = input.nextInt();
+                        done = true;
+                        input.nextLine(); //Skips to after next null/carry-char
+                    } else {
+                        s = input.nextLine().toUpperCase();
+                        if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this point
+                            return;
+                        }
+                        if (s.length() == 1) {
+                            char c = s.charAt(0);
+                            if (c >= 'A' && c <= 'Z') {
+                                columns = c - 'A' + 1;
+                                done = true;
+                            } else {
+                                System.out.println("letter was outside of bounds, it has to be between the letter a and z");
+                            }
+                        } else {
+                            System.out.println("You either have to input a single letter, or a number");
+                        }
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("How many rows of seats does the plane have?");
+                    if (input.hasNextInt()) {
+                        rows = input.nextInt();
+                        input.nextLine();   //skips the trailing newline/carry character
+                    } else if (input.hasNextLine()) {
+                        s = input.nextLine();
+                        if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this stage
+                            return;
+                        } else {
+                            System.out.println("You need to input a number");
+                        }
+                    }
+                }
 
                 //Creates the actial flight
                 Flight newFlight = new Flight(rows, columns)
@@ -67,13 +161,31 @@ public class MainMenu {
                         .setDepartureTime(departureDate.toInstant())
                         .setArrivalTime(arrivalDate.toInstant())
                         .setFlightID(flightID);
+
+                done = false;
+                while (!done) {
+                    //Gets confirmation from user that all the flight-details are correct
+                    System.out.println("Please confirm that all the details shown here are correct:\n\n" + newFlight.toString() + "\n\nIs everything correct? [Y/N]");
+                    s = input.nextLine();
+                    if (s.toLowerCase().equals("y")){
+                        System.out.println("Registering flight");
+                        done=true;
+                    }else if (s.toLowerCase().equals("n")){
+                        System.out.println("Cancelling flight registering");
+                        return;
+                    }else{
+                        System.out.println("Please confirm that the details are correct [Y/N]");
+                    }
+                }
+
                 //Stores the new flight in the flightregister in the global TicketReservationSystem-instance
                 TicketReservationSystem.getInstance().flightRegister.addFlight(newFlight);
+                System.out.println("Flight registered");
             }
         };
-        
+
         /**
-         * The action of listing all flights avaliable in the flightregister
+         * The action of listing all flights avaliable in the flight-register
          */
         Menu listFlights = new Menu.ActionItem("List all flights") {
             @Override
@@ -84,9 +196,10 @@ public class MainMenu {
                 }
             }
         };
-        
+
         /**
-         * The action of adding a new ticket, takes the user through the process of adding a new ticket
+         * The action of adding a new ticket, takes the user through the process
+         * of adding a new ticket
          */
         Menu addTicket = new Menu.ActionItem("Add ticket") {
             @Override
@@ -119,15 +232,15 @@ public class MainMenu {
                 lastName = input.nextLine();
                 System.out.println("Input the passengers mail address");
                 mailAddress = input.nextLine();
-                passenger = new Passenger(firstName,lastName,mailAddress);
+                passenger = new Passenger(firstName, lastName, mailAddress);
                 System.out.println("lastly, what's the price of the ticket?");
                 price = input.nextInt();
-                
+
                 Ticket newTicket = new Ticket(selectedSeat, price, flightID, passenger);
                 TicketReservationSystem.getInstance().ticketRegister.addTicket(newTicket);
             }
         };
-        
+
         /**
          * The action of listing all registered tickets
          */
@@ -135,30 +248,33 @@ public class MainMenu {
             @Override
             public void run() {
                 Iterator<Ticket> i = TicketReservationSystem.getInstance().ticketRegister.iterator();
-                while (i.hasNext()){
+                while (i.hasNext()) {
                     System.out.println(i.next());
                 }
             }
         };
-        
+
         /**
-         * Debug-menu option that quickly adds a flight of a predetermined route etc.
+         * Debug-menu option that quickly adds a flight of a predetermined route
+         * etc.
          */
         Menu addTestFlight = new Menu.ActionItem("Add test flight") {
             @Override
             public void run() {
-                Flight newFlight = new Flight(6,10)
+                Flight newFlight = new Flight(6, 10)
                         .setDepartureCity("OSL")
                         .setArrivalCity("TND")
-                        .setDepartureTime(Instant.now())                    //Sets the flight to be leaving NOW
-                        .setArrivalTime(Instant.now().plusSeconds(3600))    //Sets the flight to be arriving in 3600 seconds (one hour)
+                        .setDepartureTime(Instant.now()) //Sets the flight to be leaving NOW
+                        .setArrivalTime(Instant.now().plusSeconds(3600)) //Sets the flight to be arriving in 3600 seconds (one hour)
                         .setFlightID("SK123");
                 TicketReservationSystem.getInstance().flightRegister.addFlight(newFlight);
             }
         };
-        
+
         /**
-         * Debug-menu option that reinvents maths and tear a rift in the space-time continuum in order to further expand the capabilities of this already amazing software
+         * Debug-menu option that reinvents maths and tear a rift in the
+         * space-time continuum in order to further expand the capabilities of
+         * this already amazing software
          */
         Menu selfDestruct = new Menu.ActionItem("Self-destruct") {
             @Override
@@ -167,7 +283,7 @@ public class MainMenu {
                 i = 0 / i;
             }
         };
-        
+
         /**
          * The debug-submenu holding all debug actions
          */
@@ -177,9 +293,10 @@ public class MainMenu {
         /**
          * Root menu holding all options and sub-menus
          */
-        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets,testSubMenu)
+        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, testSubMenu)
                 .setExit(true)
                 .setFallsThrough(false);
+
         /**
          * Runs the root-menu
          */
