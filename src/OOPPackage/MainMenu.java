@@ -2,17 +2,15 @@ package OOPPackage;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  *
  * @author Thomas Sund Mjåland
  *
- *
- * ATTENTION: This is in no way a final draft, it is unstable, prone to crashing
- * and with little to no errorhandling, it is only meant to demonstrate the
- * possibilities and give a taste of what is to come
  */
 public class MainMenu {
 
@@ -29,18 +27,19 @@ public class MainMenu {
             @Override
             public void run() {
                 //the data we need to collect from the user
-                Date departureDate=null;
-                Date arrivalDate=null;
-                String departureCity=null;
-                String arrivalCity=null;
-                String flightID=null;
-                int rows=0, columns=0;
+                Date departureDate = null;
+                Date arrivalDate = null;
+                String departureCity = null;
+                String arrivalCity = null;
+                String flightID = null;
+                int rows = 0, columns = 0;
 
                 //The date format we use to parse the user's date-input
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM HH:mm");
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM HH:mm yyyy zzzz");
                 boolean done = false; //Used to repeat the inputting until valid input has been given
                 String s = ""; //Used to hold given input before being processed
 
+                //System.out.println(Calendar.getInstance().getTimeZone().);
                 done = false;
                 while (!done) {
                     System.out.println("Input the departure date [day/month hour:minute]");
@@ -49,13 +48,16 @@ public class MainMenu {
                         if (s.toLowerCase().equals("exit")) {    //if user wishes to exit at this point
                             return;
                         }
-                        departureDate = df.parse(s);
+                        System.out.println(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+" "+ "UTC");
+                        departureDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+" "+ "UTC");
                         done = true;
                     } catch (Exception ex) {
                         System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
                     }
                 }
 
+                System.out.println(departureDate.toInstant().atZone(ZoneId.of("Z")));
+                
                 done = false;
                 while (!done) {
                     System.out.println("Input the arrival date [day/month hour:minute]");
@@ -64,7 +66,7 @@ public class MainMenu {
                         if (s.toLowerCase().equals("exit")) {    //If user wishes to exit at this point
                             return;
                         }
-                        arrivalDate = df.parse(s);
+                        arrivalDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+ " +0000");
                         done = true;
                     } catch (Exception ex) {
                         System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
@@ -144,6 +146,7 @@ public class MainMenu {
                     if (input.hasNextInt()) {
                         rows = input.nextInt();
                         input.nextLine();   //skips the trailing newline/carry character
+                        done = true;
                     } else if (input.hasNextLine()) {
                         s = input.nextLine();
                         if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this stage
@@ -167,19 +170,19 @@ public class MainMenu {
                     //Gets confirmation from user that all the flight-details are correct
                     System.out.println("Please confirm that all the details shown here are correct:\n\n" + newFlight.toString() + "\n\nIs everything correct? [Y/N]");
                     s = input.nextLine();
-                    if (s.toLowerCase().equals("y")){
+                    if (s.toLowerCase().equals("y")) {
                         System.out.println("Registering flight");
-                        done=true;
-                    }else if (s.toLowerCase().equals("n")){
+                        done = true;
+                    } else if (s.toLowerCase().equals("n")) {
                         System.out.println("Cancelling flight registering");
                         return;
-                    }else{
+                    } else {
                         System.out.println("Please confirm that the details are correct [Y/N]");
                     }
                 }
 
                 //Stores the new flight in the flightregister in the global TicketReservationSystem-instance
-                TicketReservationSystem.getInstance().flightRegister.addFlight(newFlight);
+                TicketReservationSystem.getInstance().registerFlight(newFlight);
                 System.out.println("Flight registered");
             }
         };
@@ -190,7 +193,7 @@ public class MainMenu {
         Menu listFlights = new Menu.ActionItem("List all flights") {
             @Override
             public void run() {
-                Iterator<Flight> i = TicketReservationSystem.getInstance().flightRegister.iterator();
+                Iterator<Flight> i = TicketReservationSystem.getInstance().getFlightIterator();
                 while (i.hasNext()) {
                     System.out.println(i.next());
                 }
@@ -205,39 +208,129 @@ public class MainMenu {
             @Override
             public void run() {
                 //The data we need to collect from the user
-                String flightID;
-                Flight selectedFlight;
-                int row, column;
-                Seat selectedSeat;
-                Passenger passenger;
-                String firstName, lastName, mailAddress;
-                int price;
+                String flightID = null;
+                Flight selectedFlight = null;
+                int row = 0, column = 0;
+                Seat selectedSeat = null;
+                Passenger passenger = null;
+                String firstName = null, lastName = null, mailAddress = null;
+                int price = 0;
 
-                System.out.println("Input flightID of wanted flight");
-                flightID = input.nextLine();
-                selectedFlight = TicketReservationSystem.getInstance().flightRegister.getFlightByFlightID(flightID);
-                if (selectedFlight == null) {
-                    System.out.println("Could not find flight");
-                    return;
+                boolean done = false; //Holds wether or not the current step is done
+                String s = "";
+
+                done = false;
+                while (!done) {
+                    System.out.println("Input flightID of wanted flight");
+                    s = input.nextLine().toUpperCase();
+                    if (s.toLowerCase().equals("exit")) {    //If the user wishes to exit
+                        return;
+                    }
+                    flightID = s;
+                    selectedFlight = TicketReservationSystem.getInstance().getFlightByFlightID(flightID);
+                    if (selectedFlight == null) {
+                        System.out.println("Could not find flight '" + s + "'");
+                    } else {
+                        done = true;
+                    }
                 }
-                System.out.println("This flight has " + Integer.toString(selectedFlight.seats.seats.length) + " rows and " + Integer.toString(selectedFlight.seats.seats[0].length) + " columns of seats");
-                System.out.println("Input wanted seat [row column]");
-                row = input.nextInt();
-                column = input.nextInt();
-                input.nextLine();   //remove trailing characters and cr
-                selectedSeat = selectedFlight.seats.getSeat(row, column);
-                System.out.println("Input the passengers first name");
-                firstName = input.nextLine();
-                System.out.println("Input the passengers last name");
-                lastName = input.nextLine();
-                System.out.println("Input the passengers mail address");
-                mailAddress = input.nextLine();
+
+                done = false;
+                while (!done) {
+                    System.out.println("This flight has " + Integer.toString(selectedFlight.seats.seats.length) + " rows and " + Integer.toString(selectedFlight.seats.seats[0].length) + " columns of seats");
+                    System.out.println("Input wanted seat, for example: 13B");
+                    s = input.nextLine().toUpperCase();
+                    if (s.toLowerCase().equals("exit")) {    //If user wishes to exit menu at this point
+                        return;
+                    }
+                    if (Pattern.matches("\\d+[A-Z]", s)) { //tests if the input matches the regex pattern '\d+[A-Z]'
+                        Matcher m = Pattern.compile("(\\d+)([A-Z])").matcher(s);
+                        m.find();
+                        row = Integer.parseInt(m.group(1));
+                        column = m.group(2).charAt(0) - 'A' + 1;
+                        selectedSeat = selectedFlight.seats.getSeat(row, column);
+                        if (selectedSeat.isAvailable()) {
+                            done = true;
+                        } else {
+                            System.out.println("Sadly, the seat " + s + " is not avaliable, please try another seat");
+                        }
+                    } else {
+                        System.out.println("Did not recognice input as valid seat, remember to input the seat as a number followed by a character, such as 15C");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("Input the passengers first name");
+                    s = input.nextLine();
+                    if (Pattern.matches("^[a-zA-Z\\-]+$", s)) {
+                        firstName = s;
+                        done = true;
+                    } else {
+                        System.out.println("Please input only your first name, note that only a-z and '-' are allowed characters");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("Input the passengers last name");
+                    s = input.nextLine();
+                    if (Pattern.matches("^[a-zA-Z\\-]+$", s)) {
+                        lastName = s;
+                        done = true;
+                    } else {
+                        System.out.println("Please input only your last name, note that only a-z and '-' are allowed characters");
+                    }
+                }
+                done = false;
+                while (!done) {
+                    System.out.println("Input the passengers mail address");
+                    s = input.nextLine();
+                    if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this point
+                        return;
+                    }
+                    if (Pattern.matches("^[^@ ]+?@[a-zA-Z]+?\\.[a-zA-Z]+$", s)) {  //Regex is really beautiful, isn't it?
+                        mailAddress = s;
+                        done = true;
+                    } else {
+                        System.out.println(s + " is not recognized as a valid mail-address");
+                    }
+                }
                 passenger = new Passenger(firstName, lastName, mailAddress);
-                System.out.println("lastly, what's the price of the ticket?");
-                price = input.nextInt();
+                done = false;
+                while (!done) {
+                    System.out.println("lastly, what's the price of the ticket?");
+                    s = input.nextLine();
+                    if (s.toLowerCase().equals("exit")) {
+                        return;
+                    }
+                    if (Pattern.matches("^\\d$", s)) {
+                        price = Integer.parseInt(s);
+                        done = true;
+                    } else {
+                        System.out.println(s + " is not a valid number");
+                    }
+                }
 
                 Ticket newTicket = new Ticket(selectedSeat, price, flightID, passenger);
-                TicketReservationSystem.getInstance().ticketRegister.addTicket(newTicket);
+
+                done = false;
+                while (!done) {
+                    System.out.println("Please confirm that the following details are correct:\n"
+                            + newTicket
+                            + "\n[Y/N]");
+                    s = input.nextLine();
+                    if (s.toLowerCase().equals("y")) {
+                        done = true;
+                    } else if (s.toLowerCase().equals("n") || s.toLowerCase().equals("exit")) {
+                        System.out.println("Ticket not registered");
+                        return;
+                    } else {
+                        System.out.println("Please enter a valid response");
+                    }
+                }
+
+                System.out.println("Registering ticket with the system");
+                TicketReservationSystem.getInstance().registerTicket(newTicket);
+                System.out.println("Ticket registered, have a nice flight!");
             }
         };
 
@@ -247,7 +340,7 @@ public class MainMenu {
         Menu listTickets = new Menu.ActionItem("List all tickets") {
             @Override
             public void run() {
-                Iterator<Ticket> i = TicketReservationSystem.getInstance().ticketRegister.iterator();
+                Iterator<Ticket> i = TicketReservationSystem.getInstance().getTicketIterator();
                 while (i.hasNext()) {
                     System.out.println(i.next());
                 }
@@ -267,7 +360,7 @@ public class MainMenu {
                         .setDepartureTime(Instant.now()) //Sets the flight to be leaving NOW
                         .setArrivalTime(Instant.now().plusSeconds(3600)) //Sets the flight to be arriving in 3600 seconds (one hour)
                         .setFlightID("SK123");
-                TicketReservationSystem.getInstance().flightRegister.addFlight(newFlight);
+                TicketReservationSystem.getInstance().registerFlight(newFlight);
             }
         };
 
