@@ -164,6 +164,48 @@ public class MainMenu {
                         .setDepartureTime(departureDate.toInstant())
                         .setArrivalTime(arrivalDate.toInstant())
                         .setFlightID(flightID);
+                
+                
+                TicketReservationSystem sys=TicketReservationSystem.getInstance();
+                List<Crew> allCrew = sys.getPersonList(Crew.class);             //Get all instances of crew
+                List<Crew> crewList = sys.getPersonListStrict(Crew.class);      //Get all pure-crew objects
+                List<Pilot> pilotList = sys.getPersonListStrict(Pilot.class);   //Get all pure-pilot objects
+                done=false;
+                while (!done){
+                    System.out.println("Please type in the employee ID (the eID) of the crewmember that is participating in this flight, when done adding crew, type 'done'");
+                    for (Crew c:allCrew){
+                        System.out.println(c);
+                    }
+                    System.out.println("Pilots:");
+                    for (Pilot c:pilotList){
+                        System.out.println(c);
+                    }
+                    System.out.println("\nCabin-crew:");
+                    for (Crew c:crewList){
+                        System.out.println(c);
+                    }
+                    System.out.println();
+                    s = input.nextLine();
+                    if (Verifications.DONE.test(s)){
+                        done=true;
+                    }else{
+                        if (Verifications.EMPLOYEEID.test(s)){
+                            final String searchString = s;
+                            Optional<Crew> selectedCrew = 
+                                    allCrew.stream()
+                                    .filter(c->c.employeeID.equals(searchString))
+                                    .findFirst();
+                            if (selectedCrew.isPresent()){
+                                newFlight.addCrew(selectedCrew.get());
+                            }else{
+                                System.out.println("No crew found by that ID");
+                            }
+                        }else{
+                            System.out.println("That is sadly not a valid employee-ID, please try again.");
+                        }
+                    }
+                }
+                
 
                 done = false;
                 while (!done) {

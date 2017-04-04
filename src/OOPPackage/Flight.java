@@ -1,7 +1,7 @@
 package OOPPackage;
 
 import java.time.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -15,7 +15,7 @@ public class Flight {
     String arrivalCity;
     String flightID;
     SeatRegister seats;
-    ArrayList<Crew> crew;
+    List<Crew> crew = new ArrayList<>();
 
     /**
      * Creates a new flight with the given seat-array
@@ -114,6 +114,16 @@ public class Flight {
      */
     public String getFlightID(){
         return flightID;
+    }
+    
+    /**
+     * Adds a crew-object to the flight's crew-list if not already there
+     * @param newCrew, the crewmember to be added
+     */
+    public void addCrew(Crew newCrew){
+        if (!crew.contains(newCrew)){
+            crew.add(newCrew);
+        }
     }
     
     /**

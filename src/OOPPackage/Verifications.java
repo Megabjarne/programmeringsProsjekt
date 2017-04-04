@@ -23,5 +23,6 @@ public class Verifications {
     public static final Predicate<String> YESNO = Pattern.compile("^([yYnN]|[yY][eE][sS]|[nN][oO])$").asPredicate();
     public static final Predicate<String> YES = Pattern.compile("^([yY]|[yY][eE][sS])$").asPredicate();
     public static final Predicate<String> NO = Pattern.compile("^([nN]|[nN][oO])$").asPredicate();
+    public static final Predicate<String> DONE = Pattern.compile("^([dD][oO][nN][eE]|[oO][kK])$").asPredicate();
     //public static final Predicate<String> SOMETHING = Pattern.compile("^$").asPredicate();
 }

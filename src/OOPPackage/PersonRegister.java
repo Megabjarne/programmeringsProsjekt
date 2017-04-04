@@ -68,7 +68,18 @@ public class PersonRegister {
      * @param wantedClass, class instance to search for
      * @return Iterator iterating all objects in register of given class type
      */
-    public <T> Iterator<T> getIterator(Class<T> wantedClass) {
+    public <T> Iterator<T> getIteratorStrict(Class<T> wantedClass) {
+        return getListStrict(wantedClass).iterator();
+    }
+
+    /**
+     * Returns a list of all items of the given class
+     *
+     * @param <T>
+     * @param wantedClass, instance of the class type to be searched for
+     * @return List containing all objects in person-register of given class
+     */
+    public <T> List<T> getListStrict(Class<T> wantedClass) {
         List<T> retList = new ArrayList<>();
         Iterator<Person> i = list.iterator();
         Person temp;
@@ -79,7 +90,42 @@ public class PersonRegister {
                 retList.add(wantedClass.cast(temp));
             }
         }
-        return retList.iterator();
+        return retList;
+    }
+    
+
+    /**
+     * Returns an iterator iterating through all objects that are instances of the given class, please note
+     * that manipulations done through the iterator such as delete will not
+     * affect the object in the person-register.
+     *
+     * @param <T>, The generic class type wanted
+     * @param wantedClass, class instance to search for
+     * @return Iterator iterating all objects in register of given class type
+     */
+    public <T> Iterator<T> getIterator(Class<T> wantedClass) {
+        return getListStrict(wantedClass).iterator();
+    }
+
+    /**
+     * Returns a list of all items that are an instance of the given class
+     *
+     * @param <T>
+     * @param wantedClass, instance of the class instance to be searched for
+     * @return List containing all objects in person-register of given class
+     */
+    public <T> List<T> getList(Class<T> wantedClass) {
+        List<T> retList = new ArrayList<>();
+        Iterator<Person> i = list.iterator();
+        Person temp;
+
+        while (i.hasNext()) {
+            temp = i.next();
+            if (wantedClass.isInstance(temp)) {
+                retList.add(wantedClass.cast(temp));
+            }
+        }
+        return retList;
     }
 
     /**
