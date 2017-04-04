@@ -45,32 +45,32 @@ public abstract class Menu {
         /**
          * Constructor for creating a new sub-menu
          * @param name, the name shown when this menu is an option in another sub-menu
-         * @param _subMenuTitle, the title to be shown at the top of the menu when shown
-         * @param _menuItems, list of all menus to be shown as options in this menu
+         * @param subMenuTitle, the title to be shown at the top of the menu when shown
+         * @param menuItems, list of all menus to be shown as options in this menu
          */
-        public SubMenu(String name, String _subMenuTitle, Menu... _menuItems){
+        public SubMenu(String name, String subMenuTitle, Menu... menuItems){
             super(name);
-            subMenuTitle=_subMenuTitle;
-            menuItems=_menuItems;
+            this.subMenuTitle=subMenuTitle;
+            this.menuItems=menuItems;
         }
         
         /**
          * Used to optionally turn on/off the "n. Exit" option on the bottom of the menu when shown
-         * @param _hasExit, true if the menu should show an exit-option, false if not
+         * @param hasExit, true if the menu should show an exit-option, false if not
          * @return Itself
          */
-        public SubMenu setExit(boolean _hasExit){
-            hasExit=_hasExit;
+        public SubMenu setExit(boolean hasExit){
+            this.hasExit=hasExit;
             return this;
         }
         
         /**
          * Used to optionally turn on/off the "fallsThrough", fallsThrough being that the menu returns after an option has been chosen and finishes
-         * @param _fallsThrough
+         * @param fallsThrough
          * @return Itself
          */
-        public SubMenu setFallsThrough(boolean _fallsThrough){
-            fallsThrough=_fallsThrough;
+        public SubMenu setFallsThrough(boolean fallsThrough){
+            this.fallsThrough=fallsThrough;
             return this;
         }
         

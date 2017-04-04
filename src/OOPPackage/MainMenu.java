@@ -173,10 +173,7 @@ public class MainMenu {
                 done=false;
                 while (!done){
                     System.out.println("Please type in the employee ID (the eID) of the crewmember that is participating in this flight, when done adding crew, type 'done'");
-                    for (Crew c:allCrew){
-                        System.out.println(c);
-                    }
-                    System.out.println("Pilots:");
+                    System.out.println("\nPilots:");
                     for (Pilot c:pilotList){
                         System.out.println(c);
                     }
@@ -210,7 +207,13 @@ public class MainMenu {
                 done = false;
                 while (!done) {
                     //Gets confirmation from user that all the flight-details are correct
-                    System.out.println("Please confirm that all the details shown here are correct:\n\n" + newFlight.toString() + "\n\nIs everything correct? [Y/N]");
+                    System.out.println("Please confirm that all the details shown here are correct:");
+                    System.out.println("\nCrew:");
+                    newFlight.crew.stream()
+                            .forEach(
+                                    c->System.out.println("  " + c.toString()));
+                    System.out.println("\nFlight details:\n  " + newFlight.toString());
+                    System.out.println( "\n\nIs everything correct? [Y/N]");
                     s = input.nextLine();
                     if (s.toLowerCase().equals("y")) {
                         System.out.println("Registering flight");

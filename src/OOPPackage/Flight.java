@@ -100,11 +100,11 @@ public class Flight {
 
     /**
      * Sets the ID of the flight
-     * @param _flightID, the new flight ID
+     * @param flightID, the new flight ID
      * @return Itself
      */
-    public Flight setFlightID(String _flightID) {
-        flightID = _flightID;
+    public Flight setFlightID(String flightID) {
+        this.flightID = flightID;
         return this;
     }
     

@@ -15,15 +15,15 @@ public class Pilot extends Crew {
     
     /**
      * Constructor for the pilot-object
-     * @param _firstName, first name of the pilot
-     * @param _lastName, last name of the pilot
-     * @param _emailAddress, email address of the pilot
-     * @param _employeeID, employee-ID of the pilot
-     * @param _certificateNumber, certificate-number of the pilot
+     * @param firstName, first name of the pilot
+     * @param lastName, last name of the pilot
+     * @param emailAddress, email address of the pilot
+     * @param employeeID, employee-ID of the pilot
+     * @param certificateNumber, certificate-number of the pilot
      */
-    public Pilot(String _firstName, String _lastName, String _emailAddress, String _employeeID, String _certificateNumber){
-        super(_firstName,_lastName,_emailAddress,_employeeID);
-        certificateNumber = _certificateNumber;
+    public Pilot(String firstName, String lastName, String emailAddress, String employeeID, String certificateNumber){
+        super(firstName,lastName,emailAddress,employeeID);
+        this.certificateNumber = certificateNumber;
     }
     
     /**

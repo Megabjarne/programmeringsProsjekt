@@ -12,9 +12,16 @@ public class Crew extends Person {
     
     protected String employeeID;
     
-    public Crew(String _firstName, String _lastName, String _emailAddress, String _employeeID){
-        super(_firstName, _lastName, _emailAddress);
-        employeeID = _employeeID;
+    /**
+     * Creates a crew-object with the following information
+     * @param firstName, first name
+     * @param lastName, last name
+     * @param emailAddress, mail address
+     * @param employeeID, the employee's ID
+     */
+    public Crew(String firstName, String lastName, String emailAddress, String employeeID){
+        super(firstName, lastName, emailAddress);
+        this.employeeID = employeeID;
     }
     
     /**

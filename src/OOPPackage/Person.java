@@ -17,14 +17,14 @@ public class Person {
     /**
      * Constructor for creating a basic person-object, only to be called from
      * subclasses.
-     * @param _firstName, the first name of the person
-     * @param _lastName, the last name of the person
-     * @param _emailAddress, the email address associated with the person
+     * @param firstName, the first name of the person
+     * @param lastName, the last name of the person
+     * @param emailAddress, the email address associated with the person
      */
-    protected Person(String _firstName, String _lastName, String _emailAddress) {
-        firstName = _firstName;
-        surName = _lastName;
-        mailAddress = _emailAddress;
+    protected Person(String firstName, String lastName, String emailAddress) {
+        this.firstName = firstName;
+        this.surName = lastName;
+        this.mailAddress = emailAddress;
     }
 
     /**

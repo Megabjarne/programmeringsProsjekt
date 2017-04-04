@@ -9,29 +9,29 @@ package OOPPackage;
 public class Seat
 {
     // instance variables - replace the example below with your own
-    private int row;
-    private char letter;
-    private boolean available;
+    public final SeatLocation position;
+    private final boolean available;
 
     /**
-     * Constructor for objects of class seat
+     * Creates a new seat belonging to the given flight, position and with the given availability
+     * @param position, row and column this seat is in
+     * @param isAvailable, whether this seat has been reserved/booked
      */
-    public Seat(int seatRow, char seatLetter, boolean isAvailable)
+    public Seat(SeatLocation position, boolean isAvailable)
     {
         // initialise instance variables
-        row = seatRow;
-        letter = seatLetter;
+        this.position = position;
         available = isAvailable;
     }
 
     public int getRow()
     {
-        return row;
+        return position.row;
     }
     
     public char getSeatLetter()
     {
-        return letter;
+        return (char)('A' + position.column - 1);
     }
 
     public boolean isAvailable()
@@ -39,8 +39,17 @@ public class Seat
         return available;
     }
     
+    public static class SeatLocation{
+        public final int row;
+        public final int column;
+        public SeatLocation(int row, int column){
+            this.row = row;
+            this.column = column;
+        }
+    }
+    
     @Override
     public String toString(){
-        return Integer.toString(row) + letter;
+        return Integer.toString(position.row) + (char)('A' + position.column - 1);
     }
 }

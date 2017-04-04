@@ -18,7 +18,7 @@ public class SeatRegister {
         seats = new Seat[rows][columns];
         for (int x=0;x<rows;x++){
             for (int y=0;y<columns;y++){
-                seats[x][y] = new Seat(x,(char)('A'+y),true);
+                seats[x][y] = new Seat(new Seat.SeatLocation(x, y),true);
             }
         }
     }

@@ -11,18 +11,18 @@ public class Ticket {
     int price;
     String flightID;
     
-    public Ticket(Seat _seat, int _price, String flight, Passenger _passenger)
+    public Ticket(Seat seat, int price, String flight, Passenger passenger)
     {
-        seat = _seat;
-        price = _price;
-        flightID = flight;
-        passenger = _passenger;
+        this.seat = seat;
+        this.price = price;
+        this.flightID = flight;
+        this.passenger = passenger;
     }
     public int getID(){
         return ticketID;
     }
-    public void setID(int _ID){
-        ticketID=_ID;
+    public void setID(int ticketID){
+        this.ticketID=ticketID;
     }
     public int getPrice()
     {
@@ -35,6 +35,6 @@ public class Ticket {
     
     @Override
     public String toString(){
-        return Integer.toString(ticketID) + " | " + seat + " - " + passenger + " on flight " + flightID;
+        return "tID: " + Integer.toString(ticketID) + " | " + seat + " - " + passenger + " on flight " + flightID;
     }
 }
