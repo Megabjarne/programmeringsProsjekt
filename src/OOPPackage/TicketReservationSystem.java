@@ -19,6 +19,7 @@ public class TicketReservationSystem {
      */
     private final FlightRegister flightRegister;
     private final TicketRegister ticketRegister;
+    private final PersonRegister personRegister;
 
     /**
      * private default constructor, no TicketReservationSystem can be created outside the global static instance contained within the class
@@ -26,6 +27,7 @@ public class TicketReservationSystem {
     private TicketReservationSystem() {
         flightRegister = new FlightRegister();
         ticketRegister = new TicketRegister();
+        personRegister = new PersonRegister();
     }
 
     /**
@@ -52,6 +54,10 @@ public class TicketReservationSystem {
         ticketRegister.addTicket(newTicket);
     }
     
+    public void registerPerson(Person person){
+        personRegister.add(person);
+    }
+    
     /**
      * Returns an iterator for the flight register, allowing iteration through all registered flights
      * @return Iterator for all flights registered within the system
@@ -75,5 +81,15 @@ public class TicketReservationSystem {
      */
     public Flight getFlightByFlightID(String ID){
         return flightRegister.getFlightByFlightID(ID);
+    }
+    
+    /**
+     * Returns an iterator for all objects in the persons register of the given type
+     * @param <T>
+     * @param wantedClass
+     * @return 
+     */
+    public <T> Iterator<T> getPersonIterator(Class<T> wantedClass){
+        return personRegister.getIterator(wantedClass);
     }
 }

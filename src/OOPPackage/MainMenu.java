@@ -48,8 +48,8 @@ public class MainMenu {
                         if (s.toLowerCase().equals("exit")) {    //if user wishes to exit at this point
                             return;
                         }
-                        System.out.println(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+" "+ "UTC");
-                        departureDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+" "+ "UTC");
+                        System.out.println(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " " + "UTC");
+                        departureDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " " + "UTC");
                         done = true;
                     } catch (Exception ex) {
                         System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
@@ -57,7 +57,7 @@ public class MainMenu {
                 }
 
                 System.out.println(departureDate.toInstant().atZone(ZoneId.of("Z")));
-                
+
                 done = false;
                 while (!done) {
                     System.out.println("Input the arrival date [day/month hour:minute]");
@@ -66,7 +66,7 @@ public class MainMenu {
                         if (s.toLowerCase().equals("exit")) {    //If user wishes to exit at this point
                             return;
                         }
-                        arrivalDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR))+ " +0000");
+                        arrivalDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " +0000");
                         done = true;
                     } catch (Exception ex) {
                         System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
@@ -108,7 +108,7 @@ public class MainMenu {
                     if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this stage
                         return;
                     }
-                    if (Pattern.compile("[A-Z]{1,2}\\d{3,4}").matcher(s).matches()) {   //Attempts to match the given input to the '[A-Z]{1,2}\\d{3,4}'-regex pattern, can be expanded for more leeway
+                    if (Verifications.FLIGHTID.test(s)) {   //Attempts to match the given input to the '[A-Z]{1,2}\\d{3,4}'-regex pattern, can be expanded for more leeway
                         flightID = s;
                         done = true;
                     } else {
@@ -216,8 +216,8 @@ public class MainMenu {
                 String firstName = null, lastName = null, mailAddress = null;
                 int price = 0;
 
-                boolean done = false; //Holds wether or not the current step is done
-                String s = "";
+                boolean done; //Holds wether or not the current step is done
+                String s;
 
                 done = false;
                 while (!done) {
@@ -243,7 +243,7 @@ public class MainMenu {
                     if (s.toLowerCase().equals("exit")) {    //If user wishes to exit menu at this point
                         return;
                     }
-                    if (Pattern.matches("\\d+[A-Z]", s)) { //tests if the input matches the regex pattern '\d+[A-Z]'
+                    if (Verifications.SEAT.test(s)) { //tests if the input matches the regex pattern '\d+[A-Z]'
                         Matcher m = Pattern.compile("(\\d+)([A-Z])").matcher(s);
                         m.find();
                         row = Integer.parseInt(m.group(1));
@@ -262,7 +262,7 @@ public class MainMenu {
                 while (!done) {
                     System.out.println("Input the passengers first name");
                     s = input.nextLine();
-                    if (Pattern.matches("^[a-zA-Z\\-]+$", s)) {
+                    if (Verifications.NAME.test(s)) {
                         firstName = s;
                         done = true;
                     } else {
@@ -273,7 +273,7 @@ public class MainMenu {
                 while (!done) {
                     System.out.println("Input the passengers last name");
                     s = input.nextLine();
-                    if (Pattern.matches("^[a-zA-Z\\-]+$", s)) {
+                    if (Verifications.NAME.test(s)) {
                         lastName = s;
                         done = true;
                     } else {
@@ -287,7 +287,7 @@ public class MainMenu {
                     if (s.toLowerCase().equals("exit")) {    //if the user wishes to exit at this point
                         return;
                     }
-                    if (Pattern.matches("^[^@ ]+?@[a-zA-Z]+?\\.[a-zA-Z]+$", s)) {  //Regex is really beautiful, isn't it?
+                    if (Verifications.MAILADDRESS.test(s)) {
                         mailAddress = s;
                         done = true;
                     } else {
@@ -302,7 +302,7 @@ public class MainMenu {
                     if (s.toLowerCase().equals("exit")) {
                         return;
                     }
-                    if (Pattern.matches("^\\d$", s)) {
+                    if (Verifications.NUMERIC.test(s)) {
                         price = Integer.parseInt(s);
                         done = true;
                     } else {
@@ -331,6 +331,120 @@ public class MainMenu {
                 System.out.println("Registering ticket with the system");
                 TicketReservationSystem.getInstance().registerTicket(newTicket);
                 System.out.println("Ticket registered, have a nice flight!");
+            }
+        };
+
+        Menu addCrew = new Menu.ActionItem("Hire crew") {
+            @Override
+            public void run() {
+                String firstName = null;
+                String lastName = null;
+                String emailAddress = null;
+                String employeeID = null;
+                boolean isPilot = false;
+                String certificateNumber = null;
+
+                String s;
+                boolean done;
+
+                done = false;
+                while (!done) {
+                    System.out.println("What is their first name?");
+                    s=input.nextLine();
+                    if (Verifications.NAME.test(s)){
+                        firstName = s;
+                        done=true;
+                    }else{
+                        System.out.println("'" + s + "' is not a valid first name, please stick to alphabetical characters and '-' only");
+                    }
+                }
+                
+                done = false;
+                while (!done) {
+                    System.out.println("What is their last name?");
+                    s=input.nextLine();
+                    if (Verifications.NAME.test(s)){
+                        lastName = s;
+                        done=true;
+                    }else{
+                        System.out.println("'" + s + "' is not a valid last name, please stick to alphabetical characters and '-' only");
+                    }
+                }
+                
+                done = false;
+                while (!done) {
+                    System.out.println("What is their mail address?");
+                    s=input.nextLine();
+                    if (Verifications.MAILADDRESS.test(s)){
+                        emailAddress = s;
+                        done=true;
+                    }else{
+                        System.out.println("'" + s + "' is not recognized as a valid mail address");
+                    }
+                }
+                
+                done = false;
+                while (!done) {
+                    System.out.println("What is their employee-ID?");
+                    s=input.nextLine();
+                    if (Verifications.EMPLOYEEID.test(s)){
+                        employeeID = s;
+                        done=true;
+                    }else{
+                        System.out.println("'" + s + "' is not a valid employee-ID, please stick to the format 0dddd, (d-numeric character)");
+                    }
+                }
+                
+                done = false;
+                while (!done) {
+                    System.out.println("Is the employee a pilot? [Y/N]");
+                    s=input.nextLine();
+                    if (Verifications.YESNO.test(s)){
+                        isPilot = Verifications.YES.test(s);
+                        done=true;
+                    }else{
+                        System.out.println("Please answer Y for yes or N for no");
+                    }
+                }
+                
+                done = !isPilot;
+                while (!done) {
+                    System.out.println("What is the pilot's certificate-number?");
+                    s=input.nextLine();
+                    if (Verifications.CERTIFICATENUMBER.test(s)){
+                        certificateNumber = s;
+                        done=true;
+                    }else{
+                        System.out.println("'" + s + "' is not a valid certificate-number, please answer in the format '0dddddd', (d = numeric character)");
+                    }
+                }
+                
+                Crew newCrew;
+                
+                System.out.println("Please verify that this information is correct:");
+                if (isPilot){
+                    newCrew = new Pilot(firstName,lastName,emailAddress,employeeID,certificateNumber);
+                    System.out.println((Pilot)newCrew);
+                }else{
+                    newCrew = new Crew(firstName, lastName, emailAddress, employeeID);
+                    System.out.println(newCrew);
+                }
+                System.out.println("Is everything correct? [Y/N]");
+                done=false;
+                while (!done){
+                    s=input.nextLine();
+                    if (Verifications.YES.test(s)){
+                        TicketReservationSystem.getInstance().registerPerson(newCrew);
+                        System.out.println(lastName + ", " + firstName + " is now hired and registered");
+                        done=true;
+                    }else if (Verifications.NO.test(s)){
+                        //If someone sees this, what are you doing here?! go do something productive instead!
+                        System.out.println("Initializing 'Halt and catch fire' protocol,\nAll recollection of this hiring is now gone");
+                        done=true;
+                    }else{
+                        System.out.println("Please answer yes or no [Y/N],\nIt's really not that hard, like, seriously...");
+                    }
+                }
             }
         };
 
@@ -386,7 +500,7 @@ public class MainMenu {
         /**
          * Root menu holding all options and sub-menus
          */
-        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, testSubMenu)
+        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, addCrew, testSubMenu)
                 .setExit(true)
                 .setFallsThrough(false);
 

@@ -15,8 +15,7 @@ public class Flight {
     String arrivalCity;
     String flightID;
     SeatRegister seats;
-    //TODO: When generic crew-class is implemented, add crew-support here.
-    ArrayList<Object> crew;
+    ArrayList<Crew> crew;
 
     /**
      * Creates a new flight with the given seat-array
@@ -38,7 +37,7 @@ public class Flight {
     }
     
     /**
-     * returns the departuretime of the flight
+     * returns the departure-time of the flight
      * @return the departure-instant of the flight
      */
     public Instant getDepartureTime(){
