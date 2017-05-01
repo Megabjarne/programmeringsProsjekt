@@ -11,7 +11,7 @@ public class SeatRegister {
     
     /**
      * Creates a new register given the number of rows and columns in the plane
-     * @param rows, the number of rows in the plane (often given by letters)
+     * @param rows, the number of rows in the plane (often given by letter)
      * @param columns, the number of columns in the plane
      */
     public SeatRegister(int rows, int columns){

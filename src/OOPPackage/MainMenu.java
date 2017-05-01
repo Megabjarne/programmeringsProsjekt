@@ -39,16 +39,16 @@ public class MainMenu {
                 boolean done = false; //Used to repeat the inputting until valid input has been given
                 String s = ""; //Used to hold given input before being processed
 
-                //System.out.println(Calendar.getInstance().getTimeZone().);
                 done = false;
                 while (!done) {
                     System.out.println("Input the departure date [day/month hour:minute]");
+                    //Didn't even want to try making any input-validation on this one, safer to just handle all the errors this way
                     try {
                         s = input.nextLine();
                         if (s.toLowerCase().equals("exit")) {    //if user wishes to exit at this point
                             return;
                         }
-                        System.out.println(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " " + "UTC");
+                        //A mixture of black magic and unsafe input makes this code return a beautiful Date-instance
                         departureDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " " + "UTC");
                         done = true;
                     } catch (Exception ex) {
@@ -56,7 +56,7 @@ public class MainMenu {
                     }
                 }
 
-                System.out.println(departureDate.toInstant().atZone(ZoneId.of("Z")));
+                //System.out.println(departureDate.toInstant().atZone(ZoneId.of("Z")));
 
                 done = false;
                 while (!done) {
@@ -66,7 +66,7 @@ public class MainMenu {
                         if (s.toLowerCase().equals("exit")) {    //If user wishes to exit at this point
                             return;
                         }
-                        arrivalDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " +0000");
+                        arrivalDate = df.parse(s + " " + Integer.toString(Calendar.getInstance().get(Calendar.YEAR)) + " " + "UTC");
                         done = true;
                     } catch (Exception ex) {
                         System.out.println("Sorry, but '" + s + "' is not a valid date or in the wrong format");
@@ -84,7 +84,8 @@ public class MainMenu {
                         departureCity = s;
                         done = true;
                     } else {
-                        System.out.println("Sorry, but '" + s + "' is not a valid city-code, a city code must consist of three letters");
+                        //it's a monty-python reference
+                        System.out.println("Sorry, but '" + s + "' is not a valid city-code, a city code must consist of three letters, no more, no less, for so is it written.\nIt shall not be 4, nor 5, for the number shall be 3.\nNeither shall it be 2, for this is a letter less than 3, and 3 the number shall be.");
                     }
                 }
                 done = false;
@@ -261,7 +262,7 @@ public class MainMenu {
                 String firstName = null, lastName = null, mailAddress = null;
                 int price = 0;
 
-                boolean done; //Holds wether or not the current step is done
+                boolean done; //Holds whether or not the current step is done
                 String s;
 
                 done = false;
@@ -292,7 +293,7 @@ public class MainMenu {
                         Matcher m = Pattern.compile("(\\d+)([A-Z])").matcher(s);
                         m.find();
                         row = Integer.parseInt(m.group(1));
-                        column = m.group(2).charAt(0) - 'A' + 1;
+                        column = m.group(2).charAt(0) - 'A' + 1;    //Group 2 being the capture ([A-Z]), note that input is uppercase, so no need to consider a-z
                         selectedSeat = selectedFlight.seats.getSeat(row, column);
                         if (selectedSeat.isAvailable()) {
                             done = true;
@@ -545,7 +546,7 @@ public class MainMenu {
         /**
          * Root menu holding all options and sub-menus
          */
-        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, addCrew, testSubMenu)
+        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, addCrew) //, testSubMenu) //uncomment to enable Debug-menu
                 .setExit(true)
                 .setFallsThrough(false);
 
