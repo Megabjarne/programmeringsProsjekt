@@ -250,7 +250,7 @@ public class MainMenu {
          * The action of adding a new ticket, takes the user through the process
          * of adding a new ticket
          */
-        Menu addTicket = new Menu.ActionItem("Add ticket") {
+        Menu addTicket = new Menu.ActionItem("Buy ticket") {
             @Override
             public void run() {
                 //The data we need to collect from the user
@@ -267,7 +267,14 @@ public class MainMenu {
 
                 done = false;
                 while (!done) {
-                    System.out.println("Input flightID of wanted flight");
+                    //Print all available flights
+                    System.out.println("Flights:");
+                    Iterator<Flight> fi = TicketReservationSystem.getInstance().getFlightIterator();
+                    while (fi.hasNext()){
+                        System.out.println(fi.next());
+                    }
+                    
+                    System.out.println("Input flightID of the wanted flight");
                     s = input.nextLine().toUpperCase();
                     if (s.toLowerCase().equals("exit")) {    //If the user wishes to exit
                         return;
@@ -506,6 +513,40 @@ public class MainMenu {
                 }
             }
         };
+        
+        Menu inspectFlight = new Menu.ActionItem("Inspect flight"){
+            @Override
+            public void run(){
+                Scanner input = new Scanner(System.in);
+                Iterator<Flight> fi = TicketReservationSystem.getInstance().getFlightIterator();
+                if (fi.hasNext()){
+                    System.out.println("Flights:");
+                    while (fi.hasNext()){
+                        System.out.println(fi.next());
+                    }
+                    boolean done=false;
+                    String s = "";
+                    while (!done){
+                        System.out.println("Please input the flightID of the flight you wish to inspect");
+                        s = input.nextLine();
+                        Flight f = TicketReservationSystem.getInstance().getFlightByFlightID(s);
+                        if (s.equals("exit")){return;}
+                        if (Verifications.FLIGHTID.test(s) && f!=null){
+                            long dur = f.getArrivalTime().toEpochMilli() - f.getDepartureTime().toEpochMilli();
+                            System.out.println("Flight " + f.getFlightID());
+                            System.out.println("Going from " + f.getDepartureCity() + " to " + f.getArrivalCity());
+                            System.out.println("Departure-date: " + f.getDepartureTime().atZone(ZoneId.of("Z")));
+                            System.out.println("Flight duration: " + Math.floor(dur/(1000*60*60)) + " hours " + ((dur/(1000*60))%60) + " minutes");
+                            done=true;
+                        }else{
+                            System.out.println("Sorry, that's not a valid flight ID or not a flight, remember that you can type 'exit' to return to the main menu");
+                        }
+                    }
+                }else{
+                    System.out.println("Sorry, no flights in the flightregister");
+                }
+            }
+        };
 
         /**
          * Debug-menu option that quickly adds a flight of a predetermined route
@@ -546,7 +587,7 @@ public class MainMenu {
         /**
          * Root menu holding all options and sub-menus
          */
-        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, addTicket, listTickets, addCrew) //, testSubMenu) //uncomment to enable Debug-menu
+        Menu rootMenu = new Menu.SubMenu("", "Main menu", addFlight, listFlights, inspectFlight, addTicket, listTickets, addCrew) //, testSubMenu) //uncomment to enable Debug-menu
                 .setExit(true)
                 .setFallsThrough(false);
 
